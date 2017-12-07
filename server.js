@@ -6,18 +6,45 @@ var request = require('request');
 
 var PORT = 3000;
 var app = express();
+var db = require("./models");
 
-// Use morgan logger for logging requests
-app.use(logger("dev"));
-// Use body-parser for handling form submissions
+
 app.use(bodyParser.urlencoded({ extended: false }));
-// Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/thing", {
+mongoose.Promise = Promise; 
+mongoose.connect("mongodb://localhost/news_scraper", {
   useMongoClient: true
+});
+
+db.User.create({
+	username: "Elizabeth",
+	password: "pass"
+}).then( function(user) {
+	console.log(user);
+}).catch(function(err) {
+	console.log(err.message);
+});
+
+app.get("/", function(req, res) {
+	
+});
+
+app.get("/users", function(req, res) {
+	db.User.find({}).then(function(user) {
+		res.json(user);
+	}).catch(function(err) {
+		res.json(err);
+	});
+});
+
+app.get("/posts", function(req, res) {
+	db.Post.find({}).then(function(posts) {
+		res.json(posts);
+	}).catch(function(err) {
+		res.json(err);
+	});
 });
 
 
