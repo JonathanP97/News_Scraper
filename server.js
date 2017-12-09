@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cheerio = require('cheerio');
 var request = require('request');
+var axios = require('axios');
 
 var PORT = 3000;
 var app = express();
@@ -49,27 +50,33 @@ app.get("/posts", function(req, res) {
 });
 
 
-
 app.listen(PORT, function() {
 	console.log("Running on port: " + PORT);
-	scrape();
 });
 
-function scrape() {
-request("https://www.reddit.com/r/hiphopheads", function(error, response, html) {
-  var $ = cheerio.load(html);
-  var results = [];
+app.get("/scrape", function(req, res) {
+  axios.get("https://www.reddit.com/r/gamedeals").then(function(response) { 
+    var $ = cheerio.load(response.data);
 
-  $("p.title").each(function(i, element) {
-  	var title = $(element).children("a").text();
-  	var link = $(element).children("a").attr("href");
+    $("div.top-matter").each(function(i, element) {
+      var title = $(element).children("p.title").text();
+      var link = $(element).children("p.title").children("a").attr("href");
+      var author = $(element).children("p.tagline").children("a").text();
+      var date = $(element).children("p.tagline").children("time").attr("title");
 
-  	results.push({
-  	  post: i,
-  	  title: title,
-  	  link: link	
-  	});
+      var result = {
+        title: title,
+        link: link,
+        author: author,
+        date: date
+      };
+      
+      // console.log(result)
+      db.Post.create(result).then( function(dbPost) {
+        res.send("scrape complete");
+      }).catch( function(err) {
+        res.json(err);
+      });
+    });
   });
-  console.log(results);
-})
-}
+});

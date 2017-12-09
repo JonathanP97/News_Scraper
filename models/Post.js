@@ -2,24 +2,25 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PostSchema = new Schema({
-  post_title: {
+  title: {
   	type: String,
   	trim: true,
   	unique: true,
-  	required: "post needs a title!"
+  	required: "post needs a title!" 
   },
-  post_author: {
+  link: {
+    type: String, 
+    trim: true,
+    unique: true
+  },
+  author: {
   	type: String, 
-  	unique: true,
-  	required: "post needs an author!"
+  	unique: true, 
+    trim: true
   },
-  post_date: {
+  date: {
   	type: Date,
   	default: Date.now
-  },
-  points: {
-  	type: Number,
-  	default: 0,
   },
   comments: [{
   	type: Schema.Types.ObjectId,
