@@ -22,8 +22,8 @@
   <body>
     <h4 style="margin: 10px;">Enter a subreddit to scrape</h4>
     <form method="get">
-      <input type="text" name="title" placeholder="Title">
-<br><br>
+      <input type="text" name="title" placeholder="subreddit">
+      <br><br>
       <button type="submit">scrape</button>
       <br><br>
       <a href="/posts">See other posts!</a>
@@ -37,12 +37,15 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
+        // not working 
+        //ajax get with input
+        //redisplay with handlebars
         $("button").click( function(){
           event.preventDefault();
-          $.get("/scrape/" , function(data, status){
-          console.log(req.params);
-          });
-        });
+        //   $.get("/scrape/" , function(data, status){
+        //   console.log(req.params);
+        //   });
+        // });
       });
     </script>
   </body>

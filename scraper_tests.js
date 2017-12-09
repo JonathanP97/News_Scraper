@@ -10,7 +10,6 @@ function scrape() {
     var $ = cheerio.load(response.data);
 
     $("article div.story-text").each( function(i, element) {
-      if(element === 0) console.log( $(element) );
     });
 
 
@@ -40,7 +39,7 @@ function scrape() {
 
 // otherScrape();
 function otherScrape() {
-  axios.get("https://www.reddit.com/r/hiphopheads").then( function(response) {
+  axios.get("https://www.reddit.com/r/worldnews").then( function(response) {
     var $ = cheerio.load(response.data);
 
     var result = [];

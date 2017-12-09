@@ -14,11 +14,10 @@ var db = require("./models");
 app.engine("handlebars", expHnd({defaultLayout: "main"}) );
 app.set("view engine", "handlebars");
 
-var string = "i miss elizabeth";
+var thing = ["hi", "no hi"]
 app.get("/handle", function(req, res) {
-	res.render("index", string);
+	res.render("index", thing[1]);
 })
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
