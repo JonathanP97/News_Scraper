@@ -1,4 +1,5 @@
 var express = require('express');
+var expHnd = require('express-handlebars');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cheerio = require('cheerio');
@@ -8,6 +9,15 @@ var axios = require('axios');
 var PORT = 3000;
 var app = express();
 var db = require("./models");
+
+
+app.engine("handlebars", expHnd({defaultLayout: "main"}) );
+app.set("view engine", "handlebars");
+
+var string = "i miss elizabeth";
+app.get("/handle", function(req, res) {
+	res.render("index", string);
+})
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -54,8 +64,8 @@ app.listen(PORT, function() {
 	console.log("Running on port: " + PORT);
 });
 
-app.get("/scrape", function(req, res) {
-  axios.get("https://www.reddit.com/r/gamedeals").then(function(response) { 
+app.get("/scrape/:sub", function(req, res) {
+  axios.get("https://www.reddit.com/r/" + req.params.sub).then(function(response) { 
     var $ = cheerio.load(response.data);
 
     $("div.top-matter").each(function(i, element) {

@@ -2,30 +2,48 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Populate Exercise</title>
+    <title>Subreddit Scraper</title>
     <style>
       input {
         display: block;
-        height: 36px;
-        width: 200px;
-        font-size: 24px;
+        height: 26px;
+        width: 150px;
+        font-size: 18px;
       }
       textarea {
         width: 200px;
         height: 200px;
       }
+      button {
+        height: 30px;
+      }
     </style>
   </head>
   <body>
-    <form action="/submit" method="post">
-    <h2>Hello</h2>
+    <h4 style="margin: 10px;">Enter a subreddit to scrape</h4>
+    <form method="get">
       <input type="text" name="title" placeholder="Title">
-      <textarea type="text" name="body">Write Note Here</textarea>
-
-      <input type="submit">
+<br><br>
+      <button type="submit">scrape</button>
+      <br><br>
       <a href="/posts">See other posts!</a>
       <a href="/users">See other users</a>
-      <!-- <a href="/populateduser">See your profile, populated with notes!</a> -->
     </form>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("button").click( function(){
+          event.preventDefault();
+          $.get("/scrape/" , function(data, status){
+          console.log(req.params);
+          });
+        });
+      });
+    </script>
   </body>
 </html>
