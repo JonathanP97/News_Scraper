@@ -8,10 +8,10 @@
         display: block;
         height: 26px;
         width: 150px;
-        font-size: 18px;
+        font-size: 18px; 
       }
       textarea {
-        width: 200px;
+        width: 200px;  
         height: 200px;
       }
       button {
@@ -21,31 +21,34 @@
   </head>
   <body>
     <h4 style="margin: 10px;">Enter a subreddit to scrape</h4>
-    <form method="get">
-      <input type="text" name="title" placeholder="subreddit">
-      <br><br>
-      <button type="submit">scrape</button>
+    <form id="scrape-form">
+      <label for="sub-input">Subreddit to Scrape</label>
+      <input type="text" id="sub-input">
+      <input id="scrape-subreddit" type="submit" value="sub scrape">
       <br><br>
       <a href="/posts">See other posts!</a>
       <a href="/users">See other users</a>
     </form>
 
-<script
-  src="https://code.jquery.com/jquery-3.2.1.js"
-  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-  crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
 
     <script type="text/javascript">
       $(document).ready(function(){
         // not working 
         //ajax get with input
         //redisplay with handlebars
-        $("button").click( function(){
+        $("#scrape-subreddit").on("click", function(event) {
           event.preventDefault();
-        //   $.get("/scrape/" , function(data, status){
-        //   console.log(req.params);
-        //   });
-        // });
+          var queryURL = "/scrape/" + $("#sub-input").val().trim();
+          console.log(queryURL);
+
+          $.ajax({
+            url: queryURL,
+            methdod: "GET"
+          }).done(function(response) {
+            console.log(response);
+          })
+        });
       });
     </script>
   </body>

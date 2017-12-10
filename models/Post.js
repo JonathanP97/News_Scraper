@@ -5,22 +5,23 @@ var PostSchema = new Schema({
   title: {
   	type: String,
   	trim: true,
-  	unique: true,
   	required: "post needs a title!" 
   },
   link: {
     type: String, 
-    trim: true,
-    unique: true
+    trim: true
   },
   author: {
-  	type: String, 
-  	unique: true, 
+  	type: String,
     trim: true
   },
   date: {
   	type: Date,
   	default: Date.now
+  },
+  sub: {
+    type: String,
+    trim: true
   },
   comments: [{
   	type: Schema.Types.ObjectId,

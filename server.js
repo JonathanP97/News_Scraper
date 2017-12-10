@@ -1,3 +1,5 @@
+///////////////////////////////////////////////////////////////////////////////
+//Setup
 var express = require('express');
 var expHnd = require('express-handlebars');
 var bodyParser = require('body-parser');
@@ -14,10 +16,9 @@ var db = require("./models");
 app.engine("handlebars", expHnd({defaultLayout: "main"}) );
 app.set("view engine", "handlebars");
 
-var thing = ["hi", "no hi"]
-app.get("/handle", function(req, res) {
-	res.render("index", thing[1]);
-})
+app.get("/handlebars", function(req, res) {
+	res.render("index", obj);
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
@@ -29,8 +30,16 @@ mongoose.connect("mongodb://localhost/news_scraper", {
 });
 
 
-app.get("/", function(req, res) {
-	res.send("./public/index.html");
+////////////////////////////////////////////////////////////////////////////////
+//Routes
+app.get("/home", function(req, res) {
+	// res.send("./public/index.html");
+	db.Post.find({sub: "worldnews"}).then(function(post) {
+		res.render("index", post);
+	}).catch(function(err) {
+		res.json(err);
+		console.log(err);
+	});
 });
 
 app.get("/users", function(req, res) {
@@ -58,14 +67,24 @@ app.get("/posts", function(req, res) {
 	});
 });
 
+app.get("/posts/:sub", function(req, res) {
+	db.Post.find({sub: req.params.sub}).then(function(posts) {
+		res.json(posts);
+	}).catch(function(err) {
+		res.json(err);
+	});
+});
 
 app.listen(PORT, function() {
 	console.log("Running on port: " + PORT);
 });
 
+//Scraper route//
 app.get("/scrape/:sub", function(req, res) {
   axios.get("https://www.reddit.com/r/" + req.params.sub).then(function(response) { 
     var $ = cheerio.load(response.data);
+
+    var results = [];
 
     $("div.top-matter").each(function(i, element) {
       var title = $(element).children("p.title").text();
@@ -77,15 +96,26 @@ app.get("/scrape/:sub", function(req, res) {
         title: title,
         link: link,
         author: author,
-        date: date
+        date: date,
+        sub: req.params.sub
       };
-      
-      // console.log(result)
-      db.Post.create(result).then( function(dbPost) {
-        res.send("scrape complete");
-      }).catch( function(err) {
-        res.json(err);
-      });
+
+      results.push(result);
     });
+
+    results.forEach(result => {
+    	db.Post.find({title: result.title}).then(post => {
+    		if (post && post.length) {
+    			console.log("found in database", post[0].title);
+    		} else {
+    			console.log("no match found, adding to db");
+				db.Post.create(result).then(dbPost => {
+			    	res.send('scrape complete');
+			    }).catch(err => res.json(err));
+    		}
+    	})
+    })
+    res.send('scrape done');
+
   });
 });
