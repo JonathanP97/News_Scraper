@@ -12,23 +12,16 @@ var PORT = 3000;
 var app = express();
 var db = require("./models");
 
-
 app.engine("handlebars", expHnd({defaultLayout: "main"}) );
 app.set("view engine", "handlebars");
-
-app.get("/handlebars", function(req, res) {
-	res.render("index", obj);
-});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
-// Connect to the Mongo DB
 mongoose.Promise = Promise; 
 mongoose.connect("mongodb://localhost/news_scraper", {
   useMongoClient: true
 });
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //Routes
@@ -79,7 +72,7 @@ app.listen(PORT, function() {
 	console.log("Running on port: " + PORT);
 });
 
-//Scraper route//
+//Scraper route/////////////////////////////
 app.get("/scrape/:sub", function(req, res) {
   axios.get("https://www.reddit.com/r/" + req.params.sub).then(function(response) { 
     var $ = cheerio.load(response.data);

@@ -11,21 +11,25 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        // not working 
-        //ajax get with input
-        //redisplay with handlebars
+        
         $("#scrape-subreddit").on("click", function(event) {
           event.preventDefault();
-          var queryURL = "/scrape/" + $("#sub-input").val().trim();
+          var sub = $("#sub-input").val().trim();
+          var queryURL = "/scrape/" + sub;
           $("#sub-input").val(" ");
           console.log(queryURL);
 
           $.ajax({
             url: queryURL,
             methdod: "GET"
-          }).done(function(response) {
+          }).done(response => {
             console.log(response);
-          })
+          }).then(function() {
+          	$.get("/posts/" + sub, (data, status) =>{
+          		console.log(data);
+          		console.log(status);
+          	})
+          });
         });
       });
     </script>
