@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var PostSchema = new Schema({
   title: {
   	type: String,
-  	trim: true,
+  	trim: true, 
   	required: "post needs a title!" 
   },
   link: {

@@ -6,7 +6,7 @@
   .header {
   	margin: 0px;
   	background-color: #5874a3;
-  	padding: 0px 0px 5px 5px;
+  	padding: 0px 0px 5px 5px; 
   }  
   .header > h3 {
   	font-size: 20px;
@@ -25,7 +25,7 @@
   	margin: 2px 2px 5px 2px;
   }
   .post > p {
-  	font-size: 14px;
+  	font-size: 12px;
   }
   .post {
   	width: 70%;
@@ -50,6 +50,7 @@
 <div class="btn_box">
 
 </div>
+
 <a href="/posts">Other posts!</a>
 <a href="/users">Other users</a>
 <br>
@@ -59,6 +60,7 @@
   	<h5>{{this.title}}</h5>
   	<a href={{this.link}}>link</a>
   	<p>posted by: {{this.author}}</p> 
+    <p>{{this.date}}</p>
   </div>
 {{/each}}
 </div>

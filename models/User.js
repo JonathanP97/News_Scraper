@@ -10,7 +10,6 @@ var UserSchema = new Schema({
   },
   password: {
     type: String,
-    unique: true,
     required: "password please"
   },
   dateCreated: {

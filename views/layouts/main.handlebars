@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<title>test</title>
-	</head>
+	</head> 
 	<body>
 		{{{ body }}}
 	</body>
@@ -11,7 +11,21 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        
+        function getSubreddits() {
+          $.ajax({
+            url: "/sub",
+            method: "GET"
+          }).done(response => {
+            //TODO display buttons for every subreddit #not working
+            var div = $("<div class='btn_div'>");
+            response.forEach(obj => {
+              var btn = $("<button class='sub_btn'>");
+              btn.val(obj.name);
+              btn.append(div);
+            });
+          });
+        };
+
         $("#scrape-subreddit").on("click", function(event) {
           event.preventDefault();
           var sub = $("#sub-input").val().trim();
@@ -21,7 +35,7 @@
 
           $.ajax({
             url: queryURL,
-            methdod: "GET"
+            method: "GET"
           }).done(response => {
             console.log(response);
           }).then(function() {
@@ -31,6 +45,8 @@
           	})
           });
         });
+
+        getSubreddits();
       });
     </script>
 

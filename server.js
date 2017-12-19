@@ -5,7 +5,7 @@ var expHnd = require('express-handlebars');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cheerio = require('cheerio');
-var request = require('request');
+var request = require('request');  
 var axios = require('axios');
 
 var PORT = 3000;
@@ -26,7 +26,6 @@ mongoose.connect("mongodb://localhost/news_scraper", {
 ////////////////////////////////////////////////////////////////////////////////
 //Routes
 app.get("/home", function(req, res) {
-	// res.send("./public/index.html");
 	db.Post.find({sub: "worldnews"}).then(function(post) {
 		res.render("index", post);
 	}).catch(function(err) {
@@ -60,12 +59,21 @@ app.get("/posts", function(req, res) {
 	});
 });
 
+//Find posts by subreddit
 app.get("/posts/:sub", function(req, res) {
 	db.Post.find({sub: req.params.sub}).then(function(posts) {
 		res.json(posts);
 	}).catch(function(err) {
 		res.json(err);
 	});
+});
+
+app.get("/sub", function(req, res) {
+	db.Sub.find({}).then(subs => {
+		res.json(subs);
+	}).catch(err =>{
+		res.json(err);
+	})
 });
 
 app.listen(PORT, function() {
@@ -96,6 +104,23 @@ app.get("/scrape/:sub", function(req, res) {
       results.push(result);
     });
 
+    //Adds scraped subreddit to db, if not there already
+	db.Sub.find({name: results[0].sub}).then(sub => {
+		if (sub && sub.length) {
+			console.log("found", sub.name);
+		} else {
+			console.log("no match, adding subreddit");
+			db.Sub.create({
+				name: results[0].sub, 
+				link: "reddit.com/r/" + results[0].sub
+			}).then(()=> {
+				res.send('sub added');
+			}).catch(err => res.json(err));
+		}
+	});
+
+
+    //Checks array of posts for repeats within db
     results.forEach(result => {
     	db.Post.find({title: result.title}).then(post => {
     		if (post && post.length) {
@@ -106,7 +131,7 @@ app.get("/scrape/:sub", function(req, res) {
 			    	res.send('scrape complete');
 			    }).catch(err => res.json(err));
     		}
-    	})
+    	});
     })
     res.send('scrape done');
 

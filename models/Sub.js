@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SubSchema = new Schema({
-  name: {
+  name: { 
   	type: String,
   	trim: true,
   	required: "Sub needs a title!" 
