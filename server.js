@@ -26,12 +26,18 @@ mongoose.connect("mongodb://localhost/news_scraper", {
 ////////////////////////////////////////////////////////////////////////////////
 //Routes
 app.get("/home", function(req, res) {
-	db.Post.find({sub: "worldnews"}).then(function(post) {
+	db.Post.find({sub: "worldnews"}).sort({date: -1}).then(function(post) {
 		res.render("index", post);
 	}).catch(function(err) {
 		res.json(err);
 		console.log(err);
 	});
+});
+
+app.get("/home/:sub", (req, res) => {
+	db.Post.find({sub: req.params.sub}).sort({date: -1}).then(post => {
+		res.render("index", post);
+	}).catch(err => console.log(err));
 });
 
 app.get("/users", function(req, res) {

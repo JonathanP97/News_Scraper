@@ -26,8 +26,14 @@
   }
   .post > p {
   	font-size: 12px;
+    display: inline;
+  }
+  .post > button {
+    position: absolute;
+    right: 0;
   }
   .post {
+    position: relative;
   	width: 70%;
   	border: 3px solid black;
   	background-color: khaki;
@@ -36,6 +42,9 @@
   	margin-left: auto;
   	margin-right: auto;
   }
+  .comments {
+    display: none;
+  }
 </style>
 
 <div class="header">
@@ -43,7 +52,7 @@
 	<form id="scrape-form">
 		<label for="sub-input">"worldnews", "news"</label>
 		<input type="text" id="sub-input">
-		<input id="scrape-subreddit" type="submit" value="sub scrape">
+		<input id="scrape-subreddit" type="submit" value="scrape subreddit">
 		<br><br>		
 	</form>
 </div>
@@ -51,16 +60,24 @@
 
 </div>
 
-<a href="/posts">Other posts!</a>
-<a href="/users">Other users</a>
+<a href="/posts" target="_blank">Other posts!</a>
+<a href="/users" target="_blank">Other users</a>
 <br>
 <div class="post_div">
 {{#each this }}
   <div class="post">
   	<h5>{{this.title}}</h5>
-  	<a href={{this.link}}>link</a>
+  	<a href={{this.link}} target="_blank">link</a>
   	<p>posted by: {{this.author}}</p> 
     <p>{{this.date}}</p>
+    <button id="comment-div" num={{this._id}}>Comments</button>
+    <br>
+    <div class="comments">
+      <form id="comment-form">
+        <input type="text" id="comment-input">
+        <input id="post-comment" type="submit" value="comment">
+      </form>
+    </div>
   </div>
 {{/each}}
 </div>
